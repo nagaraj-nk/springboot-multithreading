@@ -1,27 +1,26 @@
 package com.srjons.multithreading.controller;
 
-import com.srjons.multithreading.service.EmployeeRequestServiceWithTimeout;
 import com.srjons.multithreading.service.EmployeeService;
+import com.srjons.multithreading.service.TestEmployeeAsyncRequestService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/employee")
+@RequestMapping("/async")
 @Slf4j
-public class EmployeeController {
+public class TestAsyncEmployeeController {
 
     @Autowired
-    EmployeeService employeeService;
+    TestEmployeeAsyncRequestService asyncRequestService;
 
-    @Autowired
-    EmployeeRequestServiceWithTimeout employeeRequestServiceWithTimeout;
-
-    @GetMapping("/get")
-    public String get() {
-        employeeRequestServiceWithTimeout.get();
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public String get(@PathVariable("id") int id) {
+        asyncRequestService.runAsync(id);
         log.info("request submitted");
         return "request submitted";
     }
