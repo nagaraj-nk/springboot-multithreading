@@ -21,7 +21,9 @@ public class TestEmployeeAsyncRequestService {
 
     @Async("testAsyncExecutor")
     public void runAsync(int id) {
-        int records = 100;
+        int records = 20;
+        log.info("runAsync name=" + Thread.currentThread().getName() + ", id=" + Thread.currentThread().getId());
+        callPrivateMethod();
         for (int i = 1; i <= records; i++) {
             Employee employee = Employee.builder()
                     .employeeId(System.currentTimeMillis())
@@ -33,7 +35,16 @@ public class TestEmployeeAsyncRequestService {
                     .designation("Designation-" + id)
                     .build();
             employeeRepo.save(employee);
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             log.info("saved employee. reqId=" + id + ", count=" + i);
         }
+    }
+
+    private void callPrivateMethod() {
+        log.info("callPrivateMethod name=" + Thread.currentThread().getName() + ", id=" + Thread.currentThread().getId());
     }
 }
